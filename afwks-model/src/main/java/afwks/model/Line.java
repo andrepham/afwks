@@ -26,7 +26,7 @@ public class Line {
 	private String name;
 
 	
-	@OneToMany(mappedBy="line", cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(mappedBy="line", cascade=CascadeType.ALL/*, orphanRemoval=true*/)
 
 	private Set<StationLine>stationslines = new LinkedHashSet<StationLine>();
 	

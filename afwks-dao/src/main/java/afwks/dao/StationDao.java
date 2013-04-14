@@ -78,10 +78,10 @@ public class StationDao {
 		Session session = sessionFactory.getCurrentSession();
 		Query query= session.createQuery("from Line where name=:name");
 		query.setParameter("name", name);
-		Line result =  (Line) query.uniqueResult();
-		session.close();
+		Line line =  (Line) query.uniqueResult();
+		//session.close();
 		
-		return result;
+		return line;
 
 	}
 	
@@ -113,19 +113,18 @@ public class StationDao {
 		Query query= session.createQuery("from StationLine where line=:line");
 		query.setParameter("line", line);
 		List<StationLine>stationLines = query.list();
-		session.close();
+		//session.close();
 		return stationLines;
 	}
 	
 	public void removeLine(Line line){
 		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
-		/*
-		 * NO NEED => orphanRemoval is true
-		 * 
-		 * for(StationLine stationLineToDel : getStationsLines(line)){
+		
+		 // NEED if no orphanRemoval attribute
+		for(StationLine stationLineToDel : getStationsLines(line)){
 			session.delete(stationLineToDel);
-		}*/
+		}
 		session.delete(line);
 		tx.commit();
 		session.close();
