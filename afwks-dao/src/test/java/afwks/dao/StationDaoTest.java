@@ -114,4 +114,11 @@ public class StationDaoTest extends AbstractTransactionalJUnit4SpringContextTest
 		Assert.assertEquals(3,stationDao.getStations().size());
 		Assert.assertEquals(2,stationDao.getStationsLines().size());
 	}
+	
+	@Test
+	public void test_createAnonymousLine(){
+		stationDao.createAnonymousLine();
+		Line line = stationDao.getLineByName("anonymous3");
+		Assert.assertNotNull(line);
+	} 
 }

@@ -34,7 +34,7 @@ public class StationDao {
 			throw re;
 		}
 		finally{
-			session.close();
+			//session.close();
 		}
 	}
 	
@@ -51,7 +51,7 @@ public class StationDao {
 			throw re;
 		}
 		finally{
-			session.close();
+			//session.close();
 		}
 	}
 	
@@ -59,7 +59,6 @@ public class StationDao {
 		
 		Session session = sessionFactory.getCurrentSession();
 		List<Line> lines= (List<Line>)session.createQuery("from Line").list();
-		session.close();
 		
 		return lines;
 	}
@@ -68,7 +67,6 @@ public class StationDao {
 		
 		Session session = sessionFactory.getCurrentSession();
 		List<Line> stations= (List<Line>)session.createQuery("from Station").list();
-		session.close();
 		
 		return stations;
 	}
@@ -93,11 +91,7 @@ public class StationDao {
 		Station station = (Station)query.uniqueResult();
 		session.close();
 		
-		if(station!=null){
-			return station;
-		}	
-		
-		return null;
+		return station;
 	}
 	
 	public List<StationLine>getStationsLines(){
@@ -127,9 +121,33 @@ public class StationDao {
 		}
 		session.delete(line);
 		tx.commit();
-		session.close();
+		//session.close();
 		
 	}
+	
+	public void createAnonymousLine(){
+		Session session = sessionFactory.getCurrentSession();
+		Transaction tx = session.beginTransaction();
+		Line line = new Line();
+		line.setName("anonymous");
+		session.saveOrUpdate(line);
+		tx.commit();
+		session.close();
+		line.setName("anonymous2");
+		
+		session = sessionFactory.getCurrentSession();
+		tx = session.beginTransaction();
+		
+		/////////////////////////////////////////////////////////
+		/* 'merge' return a reference to the persistent instance.
+		 * So the following 'line.setName(...)' has persistent effect.
+		*/
+		line = (Line)session.merge(line); //this affectation is decisive, otherwise this test fails
+		line.setName("anonymous3");
+//	    ///////////////////////////////////////////////////////
+		tx.commit();
+	}
+	
 	
 	@Required
 	public void setSessionFactory(SessionFactory sessionFactory) {
