@@ -89,7 +89,7 @@ public class StationDao {
 		Query query= session.createQuery("from Station where name=:name");
 		query.setParameter("name", name);
 		Station station = (Station)query.uniqueResult();
-		session.close();
+		//session.close();
 		
 		return station;
 	}
@@ -98,7 +98,7 @@ public class StationDao {
 		Session session = sessionFactory.getCurrentSession();
 		Query query= session.createQuery("from StationLine");
 		List<StationLine>stationLines = query.list();
-		session.close();
+		//session.close();
 		return stationLines;
 	}
 	
@@ -139,7 +139,7 @@ public class StationDao {
 		tx = session.beginTransaction();
 		
 		/////////////////////////////////////////////////////////
-		/* 'merge' return a reference to the persistent instance.
+		/* 'merge' return a reference to the managed instance.
 		 * So the following 'line.setName(...)' has persistent effect.
 		*/
 		line = (Line)session.merge(line); //this affectation is decisive, otherwise this test fails
@@ -148,6 +148,11 @@ public class StationDao {
 		tx.commit();
 	}
 	
+	public Line getAnyLine(Long id){
+		Session session = sessionFactory.getCurrentSession();
+		Line line = (Line)session.get(Line.class, id);
+		return line;
+	}
 	
 	@Required
 	public void setSessionFactory(SessionFactory sessionFactory) {

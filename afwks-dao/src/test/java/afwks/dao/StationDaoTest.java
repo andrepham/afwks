@@ -120,5 +120,41 @@ public class StationDaoTest extends AbstractTransactionalJUnit4SpringContextTest
 		stationDao.createAnonymousLine();
 		Line line = stationDao.getLineByName("anonymous3");
 		Assert.assertNotNull(line);
-	} 
+	}
+	
+	@Test
+	public void test_reading(){
+		List<Station> stations = new LinkedList<Station>();
+		Line line = new Line("Verte");
+		stations.add(stationDao.getStationInstanceByName(StationConstants.CHATELET));
+		stations.add(stationDao.getStationInstanceByName(StationConstants.STALINGRAD));
+		line.addStations(stations);
+		stationDao.storeLine(line);
+		line.setName("Rouge");
+		
+		line = (Line)stationDao.getLineByName("Rouge");
+		Assert.assertNull(line);
+		
+		line = (Line)stationDao.getLineByName("Verte");
+		Assert.assertNotNull(line);
+	}
+	
+	/**
+	 *Call to getAnyLine make Hibernate synchronize with database
+	 * => update sql request is pushed (to update the color)
+	 * 
+	 **/
+	@Test
+	public void test_synchronize_database(){
+		List<Station> stations = new LinkedList<Station>();
+		Line line = new Line("Verte");
+		stations.add(stationDao.getStationInstanceByName(StationConstants.CHATELET));
+		stations.add(stationDao.getStationInstanceByName(StationConstants.STALINGRAD));
+		line.addStations(stations);
+		stationDao.storeLine(line);
+		line = stationDao.getLineByName("Verte");
+		line.setName("Rouge");
+		line = stationDao.getAnyLine(stationDao.getLineByName("Rouge").getId());
+		Assert.assertEquals("Rouge", line.getName());
+	}
 }
