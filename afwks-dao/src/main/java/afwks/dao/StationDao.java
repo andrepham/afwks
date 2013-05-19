@@ -154,6 +154,12 @@ public class StationDao {
 		return line;
 	}
 	
+	public Line loadAnyLine(Long id){
+		Session session = sessionFactory.getCurrentSession();
+		Line line = (Line)session.load(Line.class, id);
+		return line;
+	}
+	
 	@Required
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
