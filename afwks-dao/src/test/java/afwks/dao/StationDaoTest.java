@@ -140,7 +140,7 @@ public class StationDaoTest extends AbstractTransactionalJUnit4SpringContextTest
 	}
 	
 	/**
-	 *Call to getAnyLine make Hibernate synchronize with database
+	 *2nd Call to getLineByName make Hibernate synchronize with database
 	 * => update sql request is pushed (to update the color)
 	 * 
 	 **/
@@ -154,26 +154,7 @@ public class StationDaoTest extends AbstractTransactionalJUnit4SpringContextTest
 		stationDao.storeLine(line);
 		line = stationDao.getLineByName("Verte");
 		line.setName("Rouge");
-		line = stationDao.getAnyLine(stationDao.getLineByName("Rouge").getId());
-		Assert.assertEquals("Rouge", line.getName());
-	}
-	
-	/**
-	 *Call to loadAnyLine make Hibernate synchronize with database
-	 * => update sql request is pushed (to update the color)
-	 * 
-	 **/
-	@Test
-	public void test_synchronize_database_with_Load(){
-		List<Station> stations = new LinkedList<Station>();
-		Line line = new Line("Verte");
-		stations.add(stationDao.getStationInstanceByName(StationConstants.CHATELET));
-		stations.add(stationDao.getStationInstanceByName(StationConstants.STALINGRAD));
-		line.addStations(stations);
-		stationDao.storeLine(line);
-		line = stationDao.getLineByName("Verte");
-		line.setName("Rouge");
-		line = stationDao.loadAnyLine(stationDao.getLineByName("Rouge").getId());
+		line = stationDao.getLineByName("Rouge");
 		Assert.assertEquals("Rouge", line.getName());
 	}
 }
