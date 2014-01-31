@@ -116,9 +116,9 @@ public class StationDao {
 		Transaction tx = session.beginTransaction();
 		
 		 // NEED if no orphanRemoval attribute
-		for(StationLine stationLineToDel : getStationsLines(line)){
+		/*for(StationLine stationLineToDel : getStationsLines(line)){
 			session.delete(stationLineToDel);
-		}
+		}*/
 		session.delete(line);
 		tx.commit();
 		//session.close();

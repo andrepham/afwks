@@ -1,5 +1,6 @@
 package afwks.model;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class Line {
 	private String name;
 
 	
-	@OneToMany(mappedBy="line", cascade=CascadeType.ALL/*, orphanRemoval=true*/)
+	@OneToMany(mappedBy="line", cascade=CascadeType.ALL, orphanRemoval=true)
 
 	private Set<StationLine>stationslines = new LinkedHashSet<StationLine>();
 	
@@ -46,7 +47,15 @@ public class Line {
 		
 	}
 	
-	
+	public List<Station> getStations(){
+		List<Station> stations = new ArrayList<Station>();
+		if(stationslines != null && stationslines.size()>0){
+			for(StationLine sl : stationslines){
+				stations.add(sl.getStation());
+			}
+		}
+		return stations;
+	}
 	
 	@Override
 	public int hashCode() {
@@ -73,7 +82,7 @@ public class Line {
 		return true;
 	}
 
-	public Set<StationLine> getStationslines() {
+	private Set<StationLine> getStationslines() {
 		return stationslines;
 	}
 
